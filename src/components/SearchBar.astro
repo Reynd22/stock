@@ -1,0 +1,75 @@
+---
+const { items = [], searchTerm = "" } = Astro.props;
+---
+<div class="search-wrapper">
+  <input
+    type="text"
+    id="item-search"
+    name="item-search"
+    placeholder="Buscar por número, descripción o marca"
+    value={searchTerm}
+    class="search-input"
+    oninput="filterItems()"
+  />
+</div>
+
+{items.map((item: { NUMERO: unknown; DESCRIPCION: unknown; NOMBRE_MARCA: unknown; PRECIO_VENTA: unknown; STOCK: unknown; NOMBRE_IMAGEN: unknown; }) => (
+  <div class="accordion-item" 
+       data-numero={item.NUMERO} 
+       data-descripcion={item.DESCRIPCION} 
+       data-marca={item.NOMBRE_MARCA}>
+    <div class="accordion">
+      <label>
+        <input type="checkbox" />
+        <div class="accordion-button">{item.NUMERO} - {item.DESCRIPCION}</div>
+        <div class="accordion-content">
+          <p><strong>Marca:</strong> {item.NOMBRE_MARCA}</p>
+          <p><strong>Precio:</strong> ${item.PRECIO_VENTA}</p>
+          <p><strong>Stock:</strong> {item.STOCK}</p>
+          <p><strong>Imagen:</strong> {item.NOMBRE_IMAGEN}</p>
+        </div>
+      </label>
+    </div>
+  </div>
+))}
+
+<script is:inline>
+  function filterItems() {
+    const searchTerm = document.getElementById("item-search").value.toLowerCase();
+    const searchTerms = searchTerm.split(" ");
+    const items = document.querySelectorAll(".accordion-item");
+
+    items.forEach(item => {
+      const numero = item.dataset.numero.toLowerCase();
+      const descripcion = item.dataset.descripcion.toLowerCase();
+      const marca = item.dataset.marca.toLowerCase();
+
+      const matches = searchTerms.every(term =>
+        numero.includes(term) ||
+        descripcion.includes(term) ||
+        marca.includes(term)
+      );
+
+      item.style.display = matches ? "" : "none";
+    });
+  }
+</script>
+
+<style>
+    .search-wrapper {
+      width: 400px;
+    }
+    
+    .search-input {
+      width: 100%;
+      padding: 0.4rem;
+      border: 2px solid #e2e8f0;
+      border-radius: 20px;
+      font-size: 1rem;
+    }
+    
+    .search-input:focus {
+      outline: none;
+      border-color: #4299e1;
+    }
+  </style>
