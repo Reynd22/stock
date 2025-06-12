@@ -34,7 +34,6 @@ const pages = Array.from({ length: endPage - startPage + 1 }, (_, i) => startPag
 <nav aria-label="Pagination" class="pagination">
   {currentPage > 1 && (
     <>
-      <a href={getUrl(1)} class="pagination__link">First</a>
       <a href={getUrl(currentPage - 1)} class="pagination__link">&laquo; Prev</a>
     </>
   )}
@@ -65,7 +64,6 @@ const pages = Array.from({ length: endPage - startPage + 1 }, (_, i) => startPag
   {currentPage < totalPages && (
     <>
       <a href={getUrl(currentPage + 1)} class="pagination__link">Next &raquo;</a>
-      <a href={getUrl(totalPages)} class="pagination__link">Last</a>
     </>
   )}
 </nav>
@@ -79,18 +77,19 @@ const pages = Array.from({ length: endPage - startPage + 1 }, (_, i) => startPag
   }
 
   .pagination__link {
+    background-color: #f9f9f9;
     padding: 0.5rem 0.75rem;
     float:  left;
-    border: 1px solid #ddd;
+    border: 1px solid #ccc;
     text-decoration: none;
     color: black;
   }
 
   .pagination__link.active {
-    background-color: #4CAF50;
+    background-color: #838383;
     color: white;
     pointer-events: none;
-    border: 1px solid #4CAF50;
+    border: 1px solid #ccc;
   }
 
   .pagination__link:hover:not(.active) {background-color: #ddd;}
@@ -106,6 +105,7 @@ const pages = Array.from({ length: endPage - startPage + 1 }, (_, i) => startPag
   }
 
   .pagination__ellipsis {
+    background-color: #f9f9f9;
     display: inline-block;
     color: black;
     padding: 0.5rem 0.75rem;

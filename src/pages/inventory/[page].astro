@@ -11,14 +11,14 @@ const searchTerm = Astro.url.searchParams.get('q') || '';
 const currentPage = Astro.params.page ? parseInt(Astro.params.page) : 1;
 
 // Pagination setup
-const pageSize = 50;
+const pageSize = 25;
 const allPosts = stockData.stock;
 const totalPages = Math.ceil(allPosts.length / pageSize);
 const paginatedPosts = allPosts.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
 export async function getStaticPaths() {
   const allPosts = stockData.stock;
-  const pageSize = 50;
+  const pageSize = 25;
   const totalPages = Math.ceil(allPosts.length / pageSize);
 
   return Array.from({ length: totalPages }, (_, i) => ({
