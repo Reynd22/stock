@@ -1,0 +1,116 @@
+---
+// Pagination.astro
+interface Props {
+  currentPage: number;
+  totalPages: number;
+  basePath?: string;
+}
+
+const { currentPage, totalPages, basePath = '' } = Astro.props;
+
+function getUrl(page: number) {
+  return page === 1 ? `${basePath}/` : `${basePath}/${page}/`;
+}
+
+// Max number of visible page links (excluding first/last/prev/next)
+const maxVisible = 10;
+const half = Math.floor(maxVisible / 2);
+
+let startPage = Math.max(2, currentPage - half);
+let endPage = Math.min(totalPages - 1, currentPage + half);
+
+// Adjust if near the start or end
+if (currentPage <= half) {
+  startPage = 2;
+  endPage = Math.min(totalPages - 1, maxVisible);
+} else if (currentPage + half >= totalPages) {
+  endPage = totalPages - 1;
+  startPage = Math.max(2, totalPages - maxVisible + 1);
+}
+
+const pages = Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i);
+---
+
+<nav aria-label="Pagination" class="pagination">
+  {currentPage > 1 && (
+    <>
+      <a href={getUrl(1)} class="pagination__link">First</a>
+      <a href={getUrl(currentPage - 1)} class="pagination__link">&laquo; Prev</a>
+    </>
+  )}
+
+  <!-- Always show page 1 -->
+  <a href={getUrl(1)} class={`pagination__link ${currentPage === 1 ? 'active' : ''}`}>1</a>
+
+  {startPage > 2 && <span class="pagination__ellipsis">…</span>}
+
+  {pages.map(page => (
+    <a
+      href={getUrl(page)}
+      class={`pagination__link ${page === currentPage ? 'active' : ''}`}
+    >
+      {page}
+    </a>
+  ))}
+
+  {endPage < totalPages - 1 && <span class="pagination__ellipsis">…</span>}
+
+  <!-- Always show last page -->
+  {totalPages > 1 && (
+    <a href={getUrl(totalPages)} class={`pagination__link ${currentPage === totalPages ? 'active' : ''}`}>
+      {totalPages}
+    </a>
+  )}
+
+  {currentPage < totalPages && (
+    <>
+      <a href={getUrl(currentPage + 1)} class="pagination__link">Next &raquo;</a>
+      <a href={getUrl(totalPages)} class="pagination__link">Last</a>
+    </>
+  )}
+</nav>
+
+<style>
+  .pagination {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 1rem;
+  }
+
+  .pagination__link {
+    padding: 0.5rem 0.75rem;
+    float:  left;
+    border: 1px solid #ddd;
+    text-decoration: none;
+    color: black;
+  }
+
+  .pagination__link.active {
+    background-color: #4CAF50;
+    color: white;
+    pointer-events: none;
+    border: 1px solid #4CAF50;
+  }
+
+  .pagination__link:hover:not(.active) {background-color: #ddd;}
+
+  .pagination__link:first-child {
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+  }
+
+  .pagination__link:last-child {
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+  }
+
+  .pagination__ellipsis {
+    display: inline-block;
+    color: black;
+    padding: 0.5rem 0.75rem;
+    float:  left;
+    border: 1px solid #ddd;
+    text-decoration: none;
+  }
+</style>
